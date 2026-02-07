@@ -24,7 +24,7 @@ function HeroContent() {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 8]} />
+      <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={60} />
       <Environment preset="night" />
 
       <group ref={groupRef}>
@@ -56,7 +56,7 @@ function HeroContent() {
       <pointLight position={[-10, -10, 5]} intensity={1} color="#f59e0b" />
 
       {/* HTML overlay */}
-      <Html distanceFactor={1.5} position={[0, 0, 0]}>
+      <Html distanceFactor={1} position={[0, 0, 0]}>
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-4 whitespace-nowrap">
             <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">
