@@ -60,12 +60,12 @@ export default function Hero3D() {
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <div className="space-y-8">
           <div className="space-y-4">
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
               <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">
                 S. Nikhil
               </span>
             </h1>
-            <p className="text-2xl md:text-3xl lg:text-4xl text-foreground/90 font-medium">
+            <p className="text-xl md:text-2xl lg:text-3xl text-foreground/90 font-medium">
               Full Stack Developer | AI Engineer | Startup Founder
             </p>
           </div>
