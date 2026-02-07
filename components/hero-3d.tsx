@@ -1,90 +1,97 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Html, PerspectiveCamera, Environment } from '@react-three/drei'
-import { useScroll } from '@react-three/drei'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { PerspectiveCamera, Environment, MeshDistortMaterial, Sphere } from '@react-three/drei'
+import { Button } from '@/components/ui/button'
 
-function HeroContent() {
-  const groupRef = useRef(null)
-
-  useEffect(() => {
-    let animationId: number
-    const animate = () => {
-      if (groupRef.current) {
-        const group = groupRef.current as any
-        group.rotation.x += 0.0005
-        group.rotation.y += 0.001
-      }
-      animationId = requestAnimationFrame(animate)
+function AnimatedSphere({ position, color, speed }: { position: [number, number, number], color: string, speed: number }) {
+  const meshRef = useRef<any>(null)
+  
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x = state.clock.getElapsedTime() * speed
+      meshRef.current.rotation.y = state.clock.getElapsedTime() * speed * 0.5
     }
-    animate()
-    return () => cancelAnimationFrame(animationId)
-  }, [])
+  })
 
   return (
+    <Sphere ref={meshRef} args={[1, 64, 64]} position={position}>
+      <MeshDistortMaterial
+        color={color}
+        attach="material"
+        distort={0.4}
+        speed={2}
+        roughness={0.2}
+        metalness={0.8}
+      />
+    </Sphere>
+  )
+}
+
+function Scene() {
+  return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 2.5]} fov={90} />
+      <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={75} />
       <Environment preset="night" />
-
-      <group ref={groupRef}>
-        {/* Floating cubes */}
-        <mesh position={[-4, 0, -2]}>
-          <boxGeometry args={[0.8, 0.8, 0.8]} />
-          <meshPhongMaterial color="#3b82f6" emissive="#1e40af" />
-        </mesh>
-
-        <mesh position={[4, 0, -2]}>
-          <boxGeometry args={[0.8, 0.8, 0.8]} />
-          <meshPhongMaterial color="#f59e0b" emissive="#b45309" />
-        </mesh>
-
-        <mesh position={[0, 3, -2]}>
-          <octahedronGeometry args={[0.6]} />
-          <meshPhongMaterial color="#10b981" emissive="#059669" />
-        </mesh>
-
-        <mesh position={[0, -3, -2]}>
-          <tetrahedronGeometry args={[0.7]} />
-          <meshPhongMaterial color="#8b5cf6" emissive="#6d28d9" />
-        </mesh>
-      </group>
-
-      {/* Lights */}
+      
       <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#3b82f6" />
-      <pointLight position={[-10, -10, 5]} intensity={1} color="#f59e0b" />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#3b82f6" />
+      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8b5cf6" />
 
-      {/* HTML overlay */}
-      <Html center distanceFactor={0.5} position={[0, 0, 0]} style={{ width: '100vw' }}>
-        <div className="text-center" style={{ transform: 'scale(2.5)' }}>
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 whitespace-nowrap">
-            <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">
-              S. Nikhil
-            </span>
-          </h1>
-          <p className="text-2xl md:text-3xl text-muted-foreground mb-6">
-            Full Stack Developer | AI Engineer | Startup Founder
-          </p>
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Building innovative solutions with Next.js, AI/ML, and modern web technologies.
-            3+ years of experience in full-stack development and product engineering.
-          </p>
-        </div>
-      </Html>
+      <AnimatedSphere position={[-3, 1, 0]} color="#3b82f6" speed={0.3} />
+      <AnimatedSphere position={[3, -1, -1]} color="#f59e0b" speed={0.2} />
+      <AnimatedSphere position={[0, 2, -2]} color="#10b981" speed={0.25} />
     </>
   )
 }
 
 export default function Hero3D() {
   return (
-    <section className="relative h-screen w-full" id="about">
-      <Canvas>
-        <HeroContent />
-      </Canvas>
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden" id="about">
+      {/* 3D Background */}
+      <div className="absolute inset-0 opacity-40">
+        <Canvas>
+          <Scene />
+        </Canvas>
+      </div>
+
+      {/* Content Overlay */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">
+                S. Nikhil
+              </span>
+            </h1>
+            <p className="text-2xl md:text-3xl lg:text-4xl text-foreground/90 font-medium">
+              Full Stack Developer | AI Engineer | Startup Founder
+            </p>
+          </div>
+
+          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Building innovative solutions with Next.js, AI/ML, and modern web technologies.
+            <span className="block mt-2">3+ years of experience in full-stack development and product engineering.</span>
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+            <a href="#projects">
+              <Button size="lg" className="text-lg px-8 py-6">
+                View My Work
+              </Button>
+            </a>
+            <a href="#contact">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
+                Get in Touch
+              </Button>
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center z-10">
         <div className="animate-bounce">
           <svg
             className="w-6 h-6 text-primary mx-auto"
