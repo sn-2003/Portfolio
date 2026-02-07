@@ -24,7 +24,7 @@ function HeroContent() {
 
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 6]} fov={60} />
+      <PerspectiveCamera makeDefault position={[0, 0, 4.5]} fov={75} />
       <Environment preset="night" />
 
       <group ref={groupRef}>
@@ -56,17 +56,17 @@ function HeroContent() {
       <pointLight position={[-10, -10, 5]} intensity={1} color="#f59e0b" />
 
       {/* HTML overlay */}
-      <Html distanceFactor={1} position={[0, 0, 0]}>
+      <Html distanceFactor={0.6} position={[0, 0, 0]}>
         <div className="text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 whitespace-nowrap">
+          <h1 className="text-6xl md:text-8xl font-bold mb-4 whitespace-nowrap">
             <span className="bg-gradient-to-r from-primary via-blue-400 to-accent bg-clip-text text-transparent">
               S. Nikhil
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8">
             Full Stack Developer | AI Engineer | Startup Founder
           </p>
-          <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
             Building innovative solutions with Next.js, AI/ML, and modern web technologies.
             3+ years of experience in full-stack development and product engineering.
           </p>
